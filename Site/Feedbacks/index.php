@@ -9,6 +9,7 @@ use App\Services\TokenService;
 
 // Начинаем сессию
 $userHasRights = true;
+$tokenExpired = false;
 session_start();
 $jwt = $_GET['token'];
 $tokenService = new TokenService();
@@ -19,6 +20,9 @@ if ((empty($jwt)) && !isset($_SESSION['token'])) {
     $roles = $tokenService->decode($jwt);
     }
     catch(Exception $ex) {
+        if($ex->getMessage()=='Invalid token: Expired') {
+            $tokenExpired = true;
+        }
         $userHasRights = false;
     }
     if (empty($roles) || !HelperService::checkUserRole($roles, UserType::Admin)) {
@@ -32,6 +36,9 @@ if ((empty($jwt)) && !isset($_SESSION['token'])) {
     $roles = $tokenService->decode($_SESSION['token']);
     }
     catch(Exception $ex) {
+        if($ex->getMessage()=='Invalid token: Expired') {
+            $tokenExpired = true;
+        }
         $userHasRights = false;
     }
     if (empty($roles) || !HelperService::checkUserRole($roles, UserType::Admin)) {
@@ -167,11 +174,15 @@ $next = $page + 1;
             </ul>
         </nav>
     </div>
+    <?php } else if($tokenExpired) { ?>
+        <div class="container mt-5">
+        <h4 class="text-center mb-5">Действие токена истекло. Требуется выйти и снова залогинится</h4>
+    </div> 
     <?php } else { ?>
         <div class="container mt-5">
         <h4 class="text-center mb-5">У вас недостаточно прав для просмотра данной страницы</h4>
-    </div> 
-    <?php } ?>
+    </div>
+        <?php } ?>
     <?php
     include __DIR__ . '/../Footer/index.html';
     ?>
