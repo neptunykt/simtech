@@ -1,0 +1,38 @@
+/* Навбар */
+
+.logout-hidden {
+    cursor: none;
+    pointer-events: none;
+    opacity: 0;
+}
+.login-hidden {
+    pointer-events: none;
+    padding-left: 10px;
+    color: #fff;
+    cursor: default;
+    opacity: 0.6;
+}
+
+.login-active, .logout-active {
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 1;
+    color: #fff;
+}
+
+.login-active:hover, .logout-active:hover {
+    text-decoration: none;
+    color: #9c9c9c
+}
+/*
+.login-disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+  }
+*/
+/* Ширина выпадающего меню */
+.navbar-nav .dropdown-menu {
+    width: 300px;
+    padding: 20px;
+}

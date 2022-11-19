@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="vendor/autoload.php"
+    colors="true"
+    stopOnFailure="false">
+    <testsuites>
+        <testsuite name="TokenService">
+            <directory suffix="Test.php">./Tests/Unit</directory>
+        </testsuite>
+        <testsuite name="FeedbackRepository">
+            <directory suffix="Test.php">./Tests/Integration</directory>
+        </testsuite>
+        <testsuite name="Feedback">
+            <directory suffix="Test.php">./Tests/e2e</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

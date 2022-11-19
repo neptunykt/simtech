@@ -1,0 +1,17 @@
+/* Основное содержимое сайта */
+
+.form-feedback-title {
+    text-align: center;
+}
+.agreement {
+    display: inline;
+}
+
+.btn-sm:focus{
+    box-shadow: none !important;
+    outline: none;
+    }
+
+.file-upload {
+    margin: 10px 0;
+}

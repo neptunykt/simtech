@@ -1,0 +1,1 @@
+{"version":1,"defects":{"Tests\\FeedbackRepositoryTest::testAddFeedbackRepository":4,"Tests\\FeedbackTest::testAddFeedback":3},"times":{"Tests\\TokenServiceTest::testTokenService":0.001,"Tests\\FeedbackRepositoryTest::testAddFeedbackRepository":0.005,"Tests\\FeedbackTest::testAddFeedback":0.013}}
