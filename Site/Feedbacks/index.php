@@ -1,7 +1,7 @@
 <?php
 define("PROJECT_ROOT_PATH", __DIR__ . "/../../");
 include PROJECT_ROOT_PATH . "/vendor/autoload.php";
-use App\DAL\FeedbackService;
+use App\DAL\PaginatorService;
 use App\Models\UserType;
 use App\Services\HelperService;
 use App\Services\TokenService;
@@ -52,15 +52,9 @@ if (isset($_POST['pageSize'])) {
 
 $pageSize = isset($_SESSION['pageSize']) ? $_SESSION['pageSize'] : 5;
 $page = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
-$paginationStart = ($page - 1) * $pageSize;
-$feedBackService = new FeedbackService();
-$feedbacks = $feedBackService->getFeedbacks($page, $pageSize);
-$sqlCount = $feedBackService->getFeedbacksCount();
-$allRecords = $sqlCount[0]['Id'];
-$totalPages = ceil($allRecords / $pageSize);
-// Предыдущий и следующий
-$prev = $page - 1;
-$next = $page + 1;
+$paginatorService = new PaginatorService();
+$paginatorService->getCounts("Id", "Feedbacks");
+$records = $paginatorService->getRecords("Feedbacks", $page, "ORDER BY CreatedOn", $pageSize);
 ?>
 <!doctype html>
 <html lang="en">
@@ -126,7 +120,7 @@ $next = $page + 1;
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($feedbacks as $feedback) : ?>
+                <?php foreach ($records as $feedback) : ?>
                     <tr>
                         <th scope="row"><?php echo $feedback['Id']; ?></th>
                         <td><?php echo $feedback['CreatedOn']; ?></td>
@@ -135,43 +129,14 @@ $next = $page + 1;
                         <td><?php echo $feedback['Sex'] == 1 ? 'Мужской' : 'Женский'; ?></td>
                         <td><?php echo $feedback['Message']; ?></td>
                         <td><a class="download-file" href="#"><?php echo $feedback['FileName']?></a></td>
-                        <!--<td><?php // echo $feedback['FileName']; ?></td> -->
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
         <!-- Pagination -->
-        <nav aria-label="Page navigation example mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item <?php if ($page <= 1) {
-                                            echo 'disabled';
-                                        } ?>">
-                    <a class="page-link" href="<?php if ($page <= 1) {
-                                                    echo '#';
-                                                } else {
-                                                    echo "?page=" . $prev;
-                                                } ?>">Предыдущая</a>
-                </li>
-
-                <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-                    <li class="page-item <?php if ($page == $i) {
-                                                echo 'active';
-                                            } ?>">
-                        <a class="page-link" href="/Site/Feedbacks/index.php?page=<?= $i; ?>"> <?= $i; ?> </a>
-                    </li>
-                <?php endfor; ?>
-
-                <li class="page-item <?php if ($page >= $totalPages) {
-                                            echo 'disabled';
-                                        } ?>">
-                    <a class="page-link" href="<?php if ($page >= $totalPages) {
-                                                    echo '#';
-                                                } else {
-                                                    echo "?page=" . $next;
-                                                } ?>">Следующая</a>
-                </li>
-            </ul>
+        <nav aria-label="mt-5">
+            <?php echo $paginatorService->createLinks(5, 'Feedbacks');?>
         </nav>
     </div>
     <?php } else if($tokenExpired) { ?>
