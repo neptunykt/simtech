@@ -38,9 +38,26 @@ class MailService
                     $mail->addAttachment(PROJECT_ROOT_PATH . "Site/uploads/" . $fileName);
                 }
                 $mail->isHTML(true);
+                $country = "";
+                switch ($data['country']) {
+                    case 1:
+                        $country = "Белоруссия";
+                        break;
+                    case 2:
+                        $country  = "Казахстан";
+                        break;
+                    case 3:
+                        $country = "Узбекистан";
+                        break;
+                    default:
+                        $country = "Россия";
+                }
                 $mail->Subject = "Поступила заявка из обратной формы";
-                $mail->Body = "<p>Адрес e-mail заявителя: " . $data["email"] . "</p><p>Согласие с условиями: " .
-                    (($data["isAgreed"] == 1) ? "Да" : "Нет") . "</p><p>Пол заявителя: " . (($data["sexOption"] == 1) ? "мужской" : "женский") . "</p>" .
+                $mail->Body = "<p>Адрес e-mail заявителя: " . $data["email"] .
+                    "<p>Страна заявителя: " . $country .
+                    "</p><p>Согласие с условиями: " .
+                    (($data["isAgreed"] == 1) ? "Да" : "Нет") .
+                    "</p><p>Пол заявителя: " . (($data["sexOption"] == 1) ? "мужской" : "женский") . "</p>" .
                     "<p>Текст обратной формы: " . $data["feedbackText"] . "</p>";
                 $mail->send();
             } catch (Exception $ex) {

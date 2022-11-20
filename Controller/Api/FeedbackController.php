@@ -147,7 +147,7 @@ class FeedbackController extends BaseController
                 $this->sendErrorField($postField . "Невалидный e-mail");
                }
                if(empty($_POST["country"])) {
-                $this->sendErrorField("Не выбрана страна");
+                $feedback["country"] = 0;
                }
                else {
                 $feedback["country"] = $_POST["country"];
