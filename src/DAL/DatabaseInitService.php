@@ -35,6 +35,7 @@ class DatabaseInitService extends DatabaseService
             `Email` varchar(255),
             `IsAgreed` BOOLEAN,
             `Sex` BOOLEAN,
+            `Country` INT,
             `Message` varchar(255),
             `FileName` varchar(255),
             PRIMARY KEY (`Id`)

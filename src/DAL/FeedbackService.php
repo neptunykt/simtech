@@ -14,11 +14,12 @@ class FeedbackService extends DatabaseService
     public function addFeedback($feedback) {
        
         $date = date("Y-m-d H:i:s");
-        $query = "INSERT INTO Feedbacks (CreatedOn, Email, IsAgreed, Sex, Message, FileName) VALUES (?,?,?,?,?,?);";
-        return $this->executeQuery($query, "ssiiss", array(
+        $query = "INSERT INTO Feedbacks (CreatedOn, Email, IsAgreed, Sex, Country, Message, FileName) VALUES (?,?,?,?,?,?,?);";
+        return $this->executeQuery($query, "ssiiiss", array(
                      $date,$feedback["email"]??"",
                      $feedback["isAgreed"],
-                     $feedback["sexOption"], 
+                     $feedback["sexOption"],
+                     $feedback["country"], 
                      $feedback["feedbackText"]??"",
                      $feedback["fileName"]??""), 
         DbRequestType::InsertWithReturnId);
@@ -28,11 +29,12 @@ class FeedbackService extends DatabaseService
      * @param mixed $feedback
      */
     public function updateFeedback($feedback) {
-        $query = "UPDATE Feedbacks SET Email=?, IsAgreed=?, Sex=?, Message=? WHERE Id=?";
-                    return $this->executeQuery($query,"siisi", 
+        $query = "UPDATE Feedbacks SET Email=?, IsAgreed=?, Sex=?, Country=?, Message=? WHERE Id=?";
+                    return $this->executeQuery($query,"siiisi", 
                         array($feedback["email"],
                         $feedback["isAgreed"], 
                         $feedback["sexOption"],
+                        $feedback["country"],
                         $feedback["feedbackText"],
                         $feedback["id"]), 
                         DbRequestType::Execute);          

@@ -146,6 +146,12 @@ class FeedbackController extends BaseController
                if(!filter_var($postField, FILTER_VALIDATE_EMAIL)){
                 $this->sendErrorField($postField . "Невалидный e-mail");
                }
+               if(empty($_POST["country"])) {
+                $this->sendErrorField("Не выбрана страна");
+               }
+               else {
+                $feedback["country"] = $_POST["country"];
+               }
                 $feedback["email"] = $postField;
                 if(empty($_POST["agreement"])){
                     $feedback["isAgreed"] = 0; 
@@ -159,7 +165,7 @@ class FeedbackController extends BaseController
                     $this->sendErrorField("Не заполнено поле пол");
                }
                 $feedback["sexOption"] = ($sexOption == "man")? 1 : 0;
-               
+                
                 $feedback["feedbackText"] = trim($_POST["feedbackText"]);
                 if(empty($feedback["feedbackText"])) {
                     $this->sendErrorField("Не заполнено текстовое поле");

@@ -1,6 +1,7 @@
 <?php
 define("PROJECT_ROOT_PATH", __DIR__ . "/../../");
 include PROJECT_ROOT_PATH . "/vendor/autoload.php";
+
 use App\DAL\PaginatorService;
 use App\Models\UserType;
 use App\Services\HelperService;
@@ -17,10 +18,9 @@ if ((empty($jwt)) && !isset($_SESSION['token'])) {
     $userHasRights = false;
 } else if (isset($jwt) && !empty($jwt)) {
     try {
-    $roles = $tokenService->decode($jwt);
-    }
-    catch(Exception $ex) {
-        if($ex->getMessage()=='Invalid token: Expired') {
+        $roles = $tokenService->decode($jwt);
+    } catch (Exception $ex) {
+        if ($ex->getMessage() == 'Invalid token: Expired') {
             $tokenExpired = true;
         }
         $userHasRights = false;
@@ -33,10 +33,9 @@ if ((empty($jwt)) && !isset($_SESSION['token'])) {
     // проверка сессионного токена на просроченность
     $tokenService = new TokenService();
     try {
-    $roles = $tokenService->decode($_SESSION['token']);
-    }
-    catch(Exception $ex) {
-        if($ex->getMessage()=='Invalid token: Expired') {
+        $roles = $tokenService->decode($_SESSION['token']);
+    } catch (Exception $ex) {
+        if ($ex->getMessage() == 'Invalid token: Expired') {
             $tokenExpired = true;
         }
         $userHasRights = false;
@@ -89,65 +88,80 @@ $records = $paginatorService->getRecords("Feedbacks", $page, "ORDER BY CreatedOn
     <?php
     include __DIR__ . './../Header/index.php';
     ?>
-    <?php if($userHasRights) { ?>
-    <div class="container mt-5">
-        <h2 class="text-center mb-5">Данные с формы обратной связи</h2>
-        <!-- Дропдаун -->
-        <div class="d-flex flex-row-reverse bd-highlight mb-3">
-            <form action="index.php" method="post">
-                <select name="pageSize" id="pageSize" class="custom-select">
-                    <option disabled selected>Число на странице</option>
-                    <?php foreach ([5, 10, 15] as $pageSize) : ?>
-                        <option <?php if (isset($_SESSION['pageSize']) && $_SESSION['pageSize'] == $pageSize) echo 'selected'; ?> value="<?= $pageSize; ?>">
-                            <?= $pageSize; ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
-        </div>
-
-        <!-- Таблица с данными -->
-        <table class="table table-bordered mb-5">
-            <thead>
-                <tr class="table-success">
-                    <th scope="col">#</th>
-                    <th scope="col">Создано</th>
-                    <th scope="col">Е-майл</th>
-                    <th scope="col">Согласие</th>
-                    <th scope="col">Пол</th>
-                    <th scope="col">Сообщение</th>
-                    <th scope="col">Файл</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($records as $feedback) : ?>
-                    <tr>
-                        <th scope="row"><?php echo $feedback['Id']; ?></th>
-                        <td><?php echo $feedback['CreatedOn']; ?></td>
-                        <td><?php echo $feedback['Email']; ?></td>
-                        <td><?php echo $feedback['IsAgreed'] == 1 ? 'Да': 'Нет'; ?></td>
-                        <td><?php echo $feedback['Sex'] == 1 ? 'Мужской' : 'Женский'; ?></td>
-                        <td><?php echo $feedback['Message']; ?></td>
-                        <td><a class="download-file" href="#"><?php echo $feedback['FileName']?></a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- Pagination -->
-        <nav aria-label="mt-5">
-            <?php echo $paginatorService->createLinks(5, 'Feedbacks');?>
-        </nav>
-    </div>
-    <?php } else if($tokenExpired) { ?>
+    <?php if ($userHasRights) { ?>
         <div class="container mt-5">
-        <h4 class="text-center mb-5">Действие токена истекло. Требуется выйти и снова залогинится</h4>
-    </div> 
+            <h2 class="text-center mb-5">Данные с формы обратной связи</h2>
+            <!-- Дропдаун -->
+            <div class="d-flex flex-row-reverse bd-highlight mb-3">
+                <form action="index.php" method="post">
+                    <select name="pageSize" id="pageSize" class="custom-select">
+                        <option disabled selected>Число на странице</option>
+                        <?php foreach ([5, 10, 15] as $pageSize) : ?>
+                            <option <?php if (isset($_SESSION['pageSize']) && $_SESSION['pageSize'] == $pageSize) echo 'selected'; ?> value="<?= $pageSize; ?>">
+                                <?= $pageSize; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
+            </div>
+
+            <!-- Таблица с данными -->
+            <table class="table table-bordered mb-5">
+                <thead>
+                    <tr class="table-success">
+                        <th scope="col">#</th>
+                        <th scope="col">Создано</th>
+                        <th scope="col">Е-майл</th>
+                        <th scope="col">Страна</th>
+                        <th scope="col">Согласие</th>
+                        <th scope="col">Пол</th>
+                        <th scope="col">Сообщение</th>
+                        <th scope="col">Файл</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($records as $feedback) : ?>
+                        <tr>
+                            <th scope="row"><?php echo $feedback['Id']; ?></th>
+                            <td><?php echo $feedback['CreatedOn']; ?></td>
+                            <td><?php echo $feedback['Email']; ?></td>
+                            <td><?php switch ($feedback['Country']) {
+                                    case 0:
+                                        echo "Россия";
+                                         break;
+                                    case 1:
+                                        echo "Белоруссия";
+                                        break;
+                                    case 2:
+                                        echo "Казахстан";
+                                        break;
+                                    case 3:
+                                        echo "Узбекистан";
+                                        break;
+                                } ?></td>
+                            <td><?php echo $feedback['IsAgreed'] == 1 ? 'Да' : 'Нет'; ?></td>
+                            <td><?php echo $feedback['Sex'] == 1 ? 'Мужской' : 'Женский'; ?></td>
+                            <td><?php echo $feedback['Message']; ?></td>
+                            <td><a class="download-file" href="#"><?php echo $feedback['FileName'] ?></a></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <nav aria-label="mt-5">
+                <?php echo $paginatorService->createLinks(5, 'Feedbacks'); ?>
+            </nav>
+        </div>
+    <?php } else if ($tokenExpired) { ?>
+        <div class="container mt-5">
+            <h4 class="text-center mb-5">Действие токена истекло. Требуется выйти и снова залогинится</h4>
+        </div>
     <?php } else { ?>
         <div class="container mt-5">
-        <h4 class="text-center mb-5">У вас недостаточно прав для просмотра данной страницы</h4>
-    </div>
-        <?php } ?>
+            <h4 class="text-center mb-5">У вас недостаточно прав для просмотра данной страницы</h4>
+        </div>
+    <?php } ?>
     <?php
     include __DIR__ . '/../Footer/index.html';
     ?>

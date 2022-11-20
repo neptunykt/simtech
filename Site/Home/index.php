@@ -42,6 +42,15 @@ include __DIR__ . '/../Header/index.php';
                            </div>           
                         </div>
                         <div class="form-group">
+                         <label for="country">Выберите страну</label>  
+                        <select id="country-feedback" class="form-select" name="country" aria-label="select">
+                        <option value="0" selected>Россия</option>
+                        <option value="1">Белоруссия</option>
+                        <option value="2">Казахстан</option>
+                        <option value="3">Узбекистан</option>
+                        </select>
+                        </div>
+                        <div class="form-group">
                             <label>Выберите ваш пол</label>
                             <br>
                             <div class="form-check-inline">

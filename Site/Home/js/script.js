@@ -49,6 +49,7 @@ window.addEventListener('load', _ => {
       $(".feedback-text").next().hide();
       $(".g-recaptcha").next().hide();
       const data = $(".form-feedback").serializeArray();
+      console.dir(data);
       const captcha = grecaptcha.getResponse();
       data.push({ name: "g-captcha-response", value: captcha });
       if ($('#file-input')[0].files[0] === undefined) {
@@ -107,6 +108,7 @@ function resetForm() {
   $("#file-input")[0].value = null;
   $("input.feedback-email").val("");
   $("textarea.feedback-text").val("");
+  $("#country-feedback").val(0);
   $("#checkbox").prop("checked", false);
   $("#man-opt").prop("checked", "man");
   // сброс капчи
