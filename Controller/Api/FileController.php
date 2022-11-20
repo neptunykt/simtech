@@ -7,7 +7,7 @@ use App\Models\ErrorResponseModel;
 use \Exception;
 
 class FileController extends BaseController {
-    private $maxsize = 131072;
+    private $maxsize = 2048000;
     private $allowed = array("gif", "png", "jpg", "txt", "log","doc", "docx", "xls", "xlsx");
     /**
      * Метод сохранения файла
@@ -16,7 +16,7 @@ class FileController extends BaseController {
         $size = $_FILES["file"]["size"];
         if($size > $this->maxsize) {
             $errorResponse = new ErrorResponseModel();
-            $errorResponse->description = "Отзыв не сохранен размер файла превышает 128 Кб";
+            $errorResponse->description = "Отзыв не сохранен размер файла превышает 2 Мб";
             $errorResponse->header = "HTTP/1.1 400";
             $this->sendError($errorResponse);
             exit;
